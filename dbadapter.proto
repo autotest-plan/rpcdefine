@@ -1,0 +1,25 @@
+syntax = "proto3";
+option go_package="/dbadapter";
+
+service DBAdapter {
+    rpc Load (Filter) returns (Tasks);
+    rpc LoadSorted(Filter) returns (Tasks);
+    rpc Store(Tasks) returns (Task);
+}
+
+message Filter {
+    map<string, string> kv=1;
+}
+
+message Task {
+    string task=1;
+    bool result=2;
+    string description=3;
+    int32 correct=4;
+    int32 fault=5;
+    string parent=6;
+}
+
+message Tasks {
+    repeated Task tasks=1;
+}
