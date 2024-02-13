@@ -12,12 +12,13 @@ message Filter {
 }
 
 message Task {
-    string task=1;
-    bool result=2;
-    string description=3;
-    int32 correct=4;
-    int32 fault=5;
-    string parent=6;
+    int32 id=1;
+    string name=2;
+    bool result=3;
+    string description=4;
+    int32 correct=5;
+    int32 fault=6;
+    string parent=7;
 }
 
 message Tasks {
