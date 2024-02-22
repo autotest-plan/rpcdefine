@@ -1,0 +1,13 @@
+
+syntax = "proto3";
+option go_package="/executor";
+
+import "dbadapter.proto";
+
+service Executor {
+    rpc Execute (Task) returns (Task);
+    rpc ExecuteBatch (Tasks) returns (stream Task);
+    rpc ExecuteAsync (Task) returns (Task);
+    rpc ExecuteBatchAsync (Tasks) returns (Task);
+    rpc LoadReport (Filter) returns (Tasks);
+}
