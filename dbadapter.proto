@@ -1,26 +1,10 @@
 syntax = "proto3";
-option go_package="/dbadapter";
+option go_package="github.com/autotest-plan/rpcdefine/go/dbadapter";
+
+import "message.proto";
 
 service DBAdapter {
     rpc Load (Filter) returns (Tasks);
     rpc LoadSorted(Filter) returns (Tasks);
     rpc Store(Tasks) returns (Task);
-}
-
-message Filter {
-    map<string, string> kv=1;
-}
-
-message Task {
-    int32 id=1;
-    string name=2;
-    bool result=3;
-    string description=4;
-    int32 correct=5;
-    int32 fault=6;
-    string parent=7;
-}
-
-message Tasks {
-    repeated Task tasks=1;
 }

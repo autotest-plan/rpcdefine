@@ -8,6 +8,7 @@ package dbadapter
 
 import (
 	context "context"
+	message "github.com/autotest-plan/rpcdefine/go/message"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,9 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DBAdapterClient interface {
-	Load(ctx context.Context, in *Filter, opts ...grpc.CallOption) (*Tasks, error)
-	LoadSorted(ctx context.Context, in *Filter, opts ...grpc.CallOption) (*Tasks, error)
-	Store(ctx context.Context, in *Tasks, opts ...grpc.CallOption) (*Task, error)
+	Load(ctx context.Context, in *message.Filter, opts ...grpc.CallOption) (*message.Tasks, error)
+	LoadSorted(ctx context.Context, in *message.Filter, opts ...grpc.CallOption) (*message.Tasks, error)
+	Store(ctx context.Context, in *message.Tasks, opts ...grpc.CallOption) (*message.Task, error)
 }
 
 type dBAdapterClient struct {
@@ -35,8 +36,8 @@ func NewDBAdapterClient(cc grpc.ClientConnInterface) DBAdapterClient {
 	return &dBAdapterClient{cc}
 }
 
-func (c *dBAdapterClient) Load(ctx context.Context, in *Filter, opts ...grpc.CallOption) (*Tasks, error) {
-	out := new(Tasks)
+func (c *dBAdapterClient) Load(ctx context.Context, in *message.Filter, opts ...grpc.CallOption) (*message.Tasks, error) {
+	out := new(message.Tasks)
 	err := c.cc.Invoke(ctx, "/DBAdapter/Load", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -44,8 +45,8 @@ func (c *dBAdapterClient) Load(ctx context.Context, in *Filter, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *dBAdapterClient) LoadSorted(ctx context.Context, in *Filter, opts ...grpc.CallOption) (*Tasks, error) {
-	out := new(Tasks)
+func (c *dBAdapterClient) LoadSorted(ctx context.Context, in *message.Filter, opts ...grpc.CallOption) (*message.Tasks, error) {
+	out := new(message.Tasks)
 	err := c.cc.Invoke(ctx, "/DBAdapter/LoadSorted", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -53,8 +54,8 @@ func (c *dBAdapterClient) LoadSorted(ctx context.Context, in *Filter, opts ...gr
 	return out, nil
 }
 
-func (c *dBAdapterClient) Store(ctx context.Context, in *Tasks, opts ...grpc.CallOption) (*Task, error) {
-	out := new(Task)
+func (c *dBAdapterClient) Store(ctx context.Context, in *message.Tasks, opts ...grpc.CallOption) (*message.Task, error) {
+	out := new(message.Task)
 	err := c.cc.Invoke(ctx, "/DBAdapter/Store", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -66,9 +67,9 @@ func (c *dBAdapterClient) Store(ctx context.Context, in *Tasks, opts ...grpc.Cal
 // All implementations must embed UnimplementedDBAdapterServer
 // for forward compatibility
 type DBAdapterServer interface {
-	Load(context.Context, *Filter) (*Tasks, error)
-	LoadSorted(context.Context, *Filter) (*Tasks, error)
-	Store(context.Context, *Tasks) (*Task, error)
+	Load(context.Context, *message.Filter) (*message.Tasks, error)
+	LoadSorted(context.Context, *message.Filter) (*message.Tasks, error)
+	Store(context.Context, *message.Tasks) (*message.Task, error)
 	mustEmbedUnimplementedDBAdapterServer()
 }
 
@@ -76,13 +77,13 @@ type DBAdapterServer interface {
 type UnimplementedDBAdapterServer struct {
 }
 
-func (UnimplementedDBAdapterServer) Load(context.Context, *Filter) (*Tasks, error) {
+func (UnimplementedDBAdapterServer) Load(context.Context, *message.Filter) (*message.Tasks, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Load not implemented")
 }
-func (UnimplementedDBAdapterServer) LoadSorted(context.Context, *Filter) (*Tasks, error) {
+func (UnimplementedDBAdapterServer) LoadSorted(context.Context, *message.Filter) (*message.Tasks, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoadSorted not implemented")
 }
-func (UnimplementedDBAdapterServer) Store(context.Context, *Tasks) (*Task, error) {
+func (UnimplementedDBAdapterServer) Store(context.Context, *message.Tasks) (*message.Task, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Store not implemented")
 }
 func (UnimplementedDBAdapterServer) mustEmbedUnimplementedDBAdapterServer() {}
@@ -99,7 +100,7 @@ func RegisterDBAdapterServer(s grpc.ServiceRegistrar, srv DBAdapterServer) {
 }
 
 func _DBAdapter_Load_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Filter)
+	in := new(message.Filter)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -111,13 +112,13 @@ func _DBAdapter_Load_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: "/DBAdapter/Load",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBAdapterServer).Load(ctx, req.(*Filter))
+		return srv.(DBAdapterServer).Load(ctx, req.(*message.Filter))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DBAdapter_LoadSorted_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Filter)
+	in := new(message.Filter)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -129,13 +130,13 @@ func _DBAdapter_LoadSorted_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/DBAdapter/LoadSorted",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBAdapterServer).LoadSorted(ctx, req.(*Filter))
+		return srv.(DBAdapterServer).LoadSorted(ctx, req.(*message.Filter))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DBAdapter_Store_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Tasks)
+	in := new(message.Tasks)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -147,7 +148,7 @@ func _DBAdapter_Store_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: "/DBAdapter/Store",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DBAdapterServer).Store(ctx, req.(*Tasks))
+		return srv.(DBAdapterServer).Store(ctx, req.(*message.Tasks))
 	}
 	return interceptor(ctx, in, info, handler)
 }
